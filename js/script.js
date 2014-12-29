@@ -21,13 +21,15 @@ function loadData() {
 
     // NY Times articles
     var nyt_api_key = config['nyt_api_key'];
-    var search_url = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?fq=glocations:("' + city + '")&api-key=' + nyt_api_key
+    var search_url = 'http://api.nytimes.com/sdvvc/search/v2/articlesearch.json?fq=glocations:("' + city + '")&api-key=' + nyt_api_key
     $.getJSON( search_url, function( data ) {
         var response = data.response;
         for (var i=0; i<response.docs.length; i++) {
             var doc = response.docs[i];
             $nytElem.append('<li class="article"><a href="' + doc.web_url + '">' + doc.snippet + '</a></li>')
 }
+    }).error(function(e) {
+        $nytHeaderElem.text('Oops, could not get articels for NYT at the moment');
     });
 
     return false;
