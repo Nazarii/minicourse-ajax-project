@@ -1,5 +1,4 @@
 function loadData() {
-
     var $body = $('body');
     var $wikiElem = $('#wikipedia-links');
     var $nytHeaderElem = $('#nytimes-header');
@@ -21,7 +20,7 @@ function loadData() {
 
     // NY Times articles
     var nyt_api_key = config['nyt_api_key'];
-    var search_url = 'http://api.nytimes.com/sdvvc/search/v2/articlesearch.json?fq=glocations:("' + city + '")&api-key=' + nyt_api_key
+    var search_url = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?fq=glocations:("' + city + '")&api-key=' + nyt_api_key
     $.getJSON( search_url, function( data ) {
         var response = data.response;
         for (var i=0; i<response.docs.length; i++) {
@@ -32,6 +31,18 @@ function loadData() {
         $nytHeaderElem.text('Oops, could not get articels for NYT at the moment');
     });
 
+    // Getting Wikipedia articles
+    var wiki_search_url = 'http://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=' + city
+    $.ajax({url: wiki_search_url,
+            dataType:'jsonp',
+            success: function(response) {
+                articles = response[1];
+                for (var i=0; i<articles.length; i++) {
+                    var article = articles[i]
+                    $wikiElem.append('<li><a href="http://en.wikipedia.org/wiki/' + article + '">' + article + '</li>')
+                }
+            }
+        })
     return false;
 };
 
